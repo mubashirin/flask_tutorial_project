@@ -51,13 +51,11 @@ def usd_tr():
     html = BS(r.content, 'html.parser')
     
     t = html.find('table', {'class': 'table-market'}).find_all('em')
-
-    # print(float(t[1].text))
     
     data = {
         'bank': 'kuveytturk',
-        'usd_tl': t[1].text,
-        'eur_tl': t[5].text,
+        'usd_tl': t[1].text.replace(',', '.'),
+        'eur_tl': t[5].text.replace(',', '.'),
     }
 
     return jsonify(data)
