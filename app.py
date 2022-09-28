@@ -1,22 +1,23 @@
-import json
-from unicodedata import decimal
+from crypt import methods
 import requests
 from bs4 import BeautifulSoup as BS
 from flask import (
     Flask,
     request,
     render_template,
-    jsonify
+    jsonify,
+    url_for,
+    flash,
+    redirect
 )
 from flask_moment import Moment
-from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'itbfrdrweq34565iytctexsxt5789obf-te3wxt3s'
+app.config['SECRET_KEY'] = '40365aa1cefc0c9ab9dec43f191d4ac8851dd6653a6a2682'
 moment = Moment(app)
 
 
@@ -27,17 +28,10 @@ class NewForm(FlaskForm):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    name = None
-    form = NewForm()
-    if form.validate_on_submit():
-        name = form.name.data
-        form.name.data = ''
-
     context = {
         'useragent': request.headers.get('User-Agent'),
-        'name': name
     }
-    return render_template('/pages/index.html', form=form, context=context)
+    return render_template('/pages/index.html', context=context)
 
 
 @app.route('/user/<name>/')
@@ -59,6 +53,16 @@ def usd_tr():
     }
 
     return jsonify(data)
+
+
+@app.route('/create/', methods=['POST', 'GET'])
+def create():
+    if request.method == 'POST':
+        name = request.form['name']
+
+        flash(f'Hello, {name.capitalize()}!')
+
+    return render_template('/pages/create.html')
 
 
 @app.errorhandler(404)
