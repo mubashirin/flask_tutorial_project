@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Home Page{% endblock %}
+{% block content %}
+<div class="container">
+    <br>
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% endfor %}
+    <div class="page-header">
+        <form method="POST">
+            <div class="form-group">
+                <label for="name">Введи свое имя</label>
+                <input type="text" class="form-control" name="name" value="{{ request.form['name'] }}" placeholder="Удиви ...">
+                <small class="form-text text-muted">Введи сюда что попало.</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -8,10 +8,12 @@ from flask import (
     jsonify,
     url_for,
     flash,
-    redirect
+    redirect,
+    session
 )
 from flask_sqlalchemy import SQLAlchemy
 from flask_moment import Moment
+from flask_migrate import Migrate
 
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -24,6 +26,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 moment = Moment(app)
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 class Role(db.Model):
@@ -79,6 +82,16 @@ def usd_tr():
 def create():
     if request.method == 'POST':
         name = request.form['name']
+        user = User.query.filter_by(username=name).first()
+        if user is None:
+            user = User(username=name)
+            db.session.add(user)
+            db.session.commit()
+            session['known'] = False
+        else:
+            session['known'] = True
+        
+        session['name'] = name
 
         flash(f'Hello, {name.capitalize()}!')
 
