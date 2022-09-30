@@ -1,10 +1,12 @@
 import os
+from dotenv import load_dotenv
 
 
+load_dotenv()
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-    SECRET_KEY = '40365aa1cefc0c9ab9dec43f191d4ac8851dd6653a6a2682'
+    SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     @staticmethod
@@ -14,16 +16,16 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or 'sqlite:///' + os.path.join(BASE_DIR, 'data-dev.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL')
 
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or 'sqlite://'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL')
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(BASE_DIR, 'data.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 
 config = {
